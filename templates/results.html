@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    <ul>
+        {% for index in indices %}
+        <li>Index: {{ index }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Back to search</a>
+</body>
+</html>
