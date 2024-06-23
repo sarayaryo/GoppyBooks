@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Search Results</h1>
-    <ul>
-        {% for index in indices %}
-        <li>Index: {{ index }}</li>
-        {% endfor %}
-    </ul>
-    <a href="/">Back to search</a>
+    <div class="container">
+        <h1>Search Results</h1>
+        <ul>
+            {% for book in results %}
+            <li>
+                <h2>{{ book['title'] }}</h2>
+                <p><strong>Authors:</strong> {{ book['authors'] }}</p>
+                <p><strong>Publisher:</strong> {{ book['publisher'] }}</p>
+                <p><strong>Published Date:</strong> {{ book['published_date'] }}</p>
+                <p><strong>Description:</strong> {{ book['description'] }}</p>
+                <p><strong>Page Count:</strong> {{ book['page_count'] }}</p>
+                <p><strong>Categories:</strong> {{ book['categories'] }}</p>
+                <p><strong>Language:</strong> {{ book['language'] }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="/">Back to search</a>
+    </div>
 </body>
 </html>
