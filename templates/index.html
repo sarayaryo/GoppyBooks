@@ -2,23 +2,62 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Book Search</title>
+    <title>Goopy Book Search</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center; /* 中央揃え */
+        }
+        .search-form {
+            margin-bottom: 20px;
+        }
+        .search-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .search-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #2980b9;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background-color: #3498db;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .radio-group label {
+            margin: 0 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Book Search</h1>
-        <form action="/search" method="post">
-            <input type="text" name="keyword" placeholder="Keyword in description">
-            <input type="text" name="title" placeholder="Title">
-            <input type="text" name="authors" placeholder="Authors">
-            <input type="text" name="publisher" placeholder="Publisher">
-            <div>
+        <h1>後藤研 書籍検索システム＜Goopy Book Search＞</h1>
+        <form class="search-form" action="/search" method="post">
+            <input type="text" name="keyword" class="search-input" placeholder="キーワード">
+            <input type="text" name="title" class="search-input" placeholder="タイトル">
+            <input type="text" name="authors" class="search-input" placeholder="著者">
+            <input type="text" name="publisher" class="search-input" placeholder="出版社">
+            <div class="radio-group">
                 <label><input type="radio" name="search_type" value="and" checked> AND検索</label>
                 <label><input type="radio" name="search_type" value="or"> OR検索</label>
             </div>
-            <button type="submit">Search</button>
+            <button type="submit" class="search-button">Search</button>
         </form>
     </div>
 </body>

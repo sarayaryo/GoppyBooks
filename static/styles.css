@@ -1,152 +1,107 @@
-body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-form {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-form input[type="text"] {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-form button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 5px;
-    transition: background-color 0.3s ease;
-}
-
-form button:hover {
-    background-color: #0056b3;
-}
-
-form div {
-    width: 100%;
-    text-align: center;
-    margin: 10px 0;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    background-color: #f9f9f9;
-    margin-bottom: 10px;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-li:hover {
-    transform: scale(1.02);
-}
-
-li img {
-    max-width: 100px;
-    margin-right: 20px;
-    border-radius: 4px;
-}
-
-li .book-info {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-li .book-info h2 {
-    margin-top: 0;
-    color: #007BFF;
-}
-
-li .book-info p {
-    margin: 5px 0;
-}
-
-li .book-info p strong {
-    color: #333;
-}
-
-a {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    color: #007BFF;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-.details {
-    display: none;
-    flex-direction: column;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #ccc;
-    width: 100%;
-}
-
-.details p {
-    margin: 5px 0;
-}
-
-li.expanded {
-    flex-direction: column;
-}
-
-li.expanded .book-info {
-    flex-direction: row;
-    align-items: flex-start;
-}
-
-li.expanded img {
-    margin-bottom: 0;
-    margin-right: 20px;
-}
-
-li.expanded .book-info > div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center; /* 中央揃え */
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 10px;
+            transition: box-shadow 0.3s;
+            text-align: left; /* 左揃え */
+        }
+        li:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .book-info {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+        }
+        .details {
+            display: none;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+        .expanded .details {
+            display: flex;
+        }
+        .title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50; /* 文字色 */
+        }
+        .meta, .details p {
+            margin: 5px 0;
+            color: #34495e; /* 文字色 */
+        }
+        img {
+            max-width: 100px;
+            border-radius: 4px;
+        }
+        a {
+            color: #2980b9; /* リンクの色 */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function toggleDetails(index) {
+            var details = document.getElementById('details-' + index);
+            var listItem = document.getElementById('list-item-' + index);
+            if (details.style.display === 'none') {
+                details.style.display = 'flex';
+                listItem.classList.add('expanded');
+            } else {
+                details.style.display = 'none';
+                listItem.classList.remove('expanded');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+        <ul>
+            {% for book in results %}
+            <li id="list-item-{{ loop.index }}" onclick="toggleDetails({{ loop.index }})">
+                <img src="{{ book['thumbnail'] }}" alt="No Image">
+                <div class="book-info">
+                    <div class="title">{{ book['title'] }}</div>
+                    <div class="meta">
+                        <p><strong>Authors:</strong> {{ book['authors'] }}</p>
+                        <p><strong>Publisher:</strong> {{ book['publisher'] }}</p>
+                    </div>
+                </div>
+                <div id="details-{{ loop.index }}" class="details">
+                    <p><strong>Published Date:</strong> {{ book['published_date'] }}</p>
+                    <p><strong>Description:</strong> {{ book['description'] }}</p>
+                    <p><strong>Page Count:</strong> {{ book['page_count'] }}</p>
+                    <p><strong>Categories:</strong> {{ book['categories'] }}</p>
+                    <p><strong>Language:</strong> {{ book['language'] }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="/">Back to search</a>
+    </div>
+</body>
+</html>
