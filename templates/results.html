@@ -4,21 +4,40 @@
     <meta charset="UTF-8">
     <title>Search Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        function toggleDetails(index) {
+            var details = document.getElementById('details-' + index);
+            var listItem = document.getElementById('list-item-' + index);
+            if (details.style.display === 'none') {
+                details.style.display = 'flex';
+                listItem.classList.add('expanded');
+            } else {
+                details.style.display = 'none';
+                listItem.classList.remove('expanded');
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Search Results</h1>
         <ul>
             {% for book in results %}
-            <li>
-                <h2>{{ book['title'] }}</h2>
-                <p><strong>Authors:</strong> {{ book['authors'] }}</p>
-                <p><strong>Publisher:</strong> {{ book['publisher'] }}</p>
-                <p><strong>Published Date:</strong> {{ book['published_date'] }}</p>
-                <p><strong>Description:</strong> {{ book['description'] }}</p>
-                <p><strong>Page Count:</strong> {{ book['page_count'] }}</p>
-                <p><strong>Categories:</strong> {{ book['categories'] }}</p>
-                <p><strong>Language:</strong> {{ book['language'] }}</p>
+            <li id="list-item-{{ loop.index }}" onclick="toggleDetails({{ loop.index }})">
+                <img src="{{ book['thumbnail'] }}" alt="No Image">
+                <div class="book-info">
+                    <h2>{{ book['title'] }}</h2>
+                    <p><strong>Authors:</strong> {{ book['authors'] }}</p>
+                    <p><strong>Publisher:</strong> {{ book['publisher'] }}</p>
+                </div>
+                <div id="details-{{ loop.index }}" class="details">
+                    <p><strong>Published Date:</strong> {{ book['published_date'] }}</p>
+                    <p><strong>Description:</strong> {{ book['description'] }}</p>
+                    <p><strong>Page Count:</strong> {{ book['page_count'] }}</p>
+                    <p><strong>Categories:</strong> {{ book['categories'] }}</p>
+                    <p><strong>Language:</strong> {{ book['language'] }}</p>
+                </div>
             </li>
             {% endfor %}
         </ul>

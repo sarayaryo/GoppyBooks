@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <title>Book Search</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <div class="container">
         <h1>Book Search</h1>
         <form action="/search" method="post">
-            <input type="text" name="query" placeholder="Search for books">
+            <input type="text" name="keyword" placeholder="Keyword in description">
+            <input type="text" name="title" placeholder="Title">
+            <input type="text" name="authors" placeholder="Authors">
+            <input type="text" name="publisher" placeholder="Publisher">
+            <div>
+                <label><input type="radio" name="search_type" value="and" checked> AND検索</label>
+                <label><input type="radio" name="search_type" value="or"> OR検索</label>
+            </div>
             <button type="submit">Search</button>
         </form>
     </div>
