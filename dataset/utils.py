@@ -42,7 +42,8 @@ def search_books(title: str = "", author: str = "", publisher: str = "", max_res
             'description': book_info.get('description', '') + '...' if book_info.get('description') else '',
             'page_count': book_info.get('pageCount', ''),
             'categories': ', '.join(book_info.get('categories', [])),
-            'language': book_info.get('language', '')
+            'language': book_info.get('language', ''),
+            'thumbnail': book_info.get('imageLinks', {}).get('thumbnail', '')
         }
         books.append(book)
     
@@ -74,7 +75,8 @@ def search_books_by_ISBN(isbn: str, max_results: int = 1) -> pd.DataFrame:
             'description': book_info.get('description', '') + '...' if book_info.get('description') else '',
             'page_count': book_info.get('pageCount', ''),
             'categories': ', '.join(book_info.get('categories', [])),
-            'language': book_info.get('language', '')
+            'language': book_info.get('language', ''),
+            'thumbnail': book_info.get('imageLinks', {}).get('thumbnail', '')
         }
         books.append(book)
     
