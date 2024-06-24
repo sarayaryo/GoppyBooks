@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Goopy Book Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center; /* 中央揃え */
+        }
+        .search-form {
+            margin-bottom: 20px;
+        }
+        .search-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .search-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #2980b9;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background-color: #3498db;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .radio-group label {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>後藤研 書籍検索システム＜Goopy Book Search＞</h1>
+        <form class="search-form" method="post" action="{{ url_for('search') }}">
+            <!-- キーワード検索 -->
+            <h2>キーワード検索</h2>
+            <input type="text" name="keyword" class="search-input" placeholder="キーワードを入力してください">
+            <input type="text" name="title" class="search-input" placeholder="タイトルを入力してください">
+            <input type="text" name="authors" class="search-input" placeholder="著者を入力してください">
+            <input type="text" name="publisher" class="search-input" placeholder="出版社を入力してください">
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="search_type" value="and" checked> AND検索
+                </label>
+                <label>
+                    <input type="radio" name="search_type" value="or"> OR検索
+                </label>
+            </div>
+            <button type="submit" class="search-button">検索</button>
+
+            <!-- ベクトル検索 -->
+            <h2>ベクトル検索</h2>
+            <input type="text" name="query" class="search-input" placeholder="検索キーワードを入力してください">
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="top_n" value="5" checked> 上位5件
+                </label>
+                <label>
+                    <input type="radio" name="top_n" value="10"> 上位10件
+                </label>
+                <label>
+                    <input type="radio" name="top_n" value="20"> 上位20件
+                </label>
+            </div>
+            <button type="submit" class="search-button">検索</button>
+        </form>
+    </div>
+</body>
+</html>

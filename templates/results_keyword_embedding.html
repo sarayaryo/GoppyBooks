@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>検索結果</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 10px;
+            transition: box-shadow 0.3s;
+        }
+        li:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .book-info {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+        }
+        .details {
+            display: none;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+        .expanded .details {
+            display: flex;
+        }
+        .title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #3498db; /* 水色 */
+        }
+        .meta, .details p {
+            margin: 5px 0;
+        }
+        img {
+            max-width: 100px;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        function toggleDetails(index) {
+            var details = document.getElementById('details-' + index);
+            var listItem = document.getElementById('list-item-' + index);
+            if (details.style.display === 'none') {
+                details.style.display = 'flex';
+                listItem.classList.add('expanded');
+            } else {
+                details.style.display = 'none';
+                listItem.classList.remove('expanded');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>検索結果</h1>
+
+        {% if keyword_results %}
+            <h2>キーワード検索結果</h2>
+            <ul>
+            {% for result in keyword_results %}
+                <li id="list-item-{{ loop.index }}" onclick="toggleDetails({{ loop.index }})">
+                    <img src="{{ result['thumbnail'] }}" alt="No Image">
+                    <div class="book-info">
+                        <div class="title">{{ result['title'] }}</div>
+                        <div class="meta">
+                            <p><strong>著者:</strong> {{ result['authors'] }}</p>
+                            <p><strong>出版社:</strong> {{ result['publisher'] }}</p>
+                        </div>
+                    </div>
+                    <div id="details-{{ loop.index }}" class="details">
+                        <p><strong>出版日:</strong> {{ result['published_date'] }}</p>
+                        <p><strong>説明:</strong> {{ result['description'] }}</p>
+                        <p><strong>ページ数:</strong> {{ result['page_count'] }}</p>
+                        <p><strong>カテゴリー:</strong> {{ result['categories'] }}</p>
+                        <p><strong>言語:</strong> {{ result['language'] }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% elif vector_results %}
+            <h2>ベクトル検索結果</h2>
+            <ul>
+            {% for result in vector_results %}
+                <li id="list-item-{{ loop.index }}" onclick="toggleDetails({{ loop.index }})">
+                    <img src="{{ result['thumbnail'] }}" alt="No Image">
+                    <div class="book-info">
+                        <div class="title">{{ result['title'] }}</div>
+                        <div class="meta">
+                            <p><strong>著者:</strong> {{ result['authors'] }}</p>
+                            <p><strong>出版社:</strong> {{ result['publisher'] }}</p>
+                        </div>
+                    </div>
+                    <div id="details-{{ loop.index }}" class="details">
+                        <p><strong>出版日:</strong> {{ result['published_date'] }}</p>
+                        <p><strong>説明:</strong> {{ result['description'] }}</p>
+                        <p><strong>ページ数:</strong> {{ result['page_count'] }}</p>
+                        <p><strong>カテゴリー:</strong> {{ result['categories'] }}</p>
+                        <p><strong>言語:</strong> {{ result['language'] }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <a href="/">検索に戻る</a>
+    </div>
+</body>
+</html>
