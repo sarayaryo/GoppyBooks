@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField
+from wtforms import StringField, IntegerField, SubmitField, SelectField
 from wtforms.validators import DataRequired
+from app.models import User
 
 class LoginForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
+    name = SelectField('Name', validators=[DataRequired()], coerce=int)
     submit = SubmitField('Login')
 
 class RegistrationForm(FlaskForm):

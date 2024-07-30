@@ -6,6 +6,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     borrowed_books = db.relationship('Borrow', backref='borrower', lazy=True)
+    current_borrowed_book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=True)
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,6 +20,7 @@ class Book(db.Model):
     language = db.Column(db.String(20))
     thumbnail = db.Column(db.String(200))
     is_borrowed = db.Column(db.Boolean, default=False)
+    borrows = db.relationship('Borrow', backref='related_book', lazy=True, overlaps="borrow_records")  # ここを変更
 
 class Borrow(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,3 +28,4 @@ class Borrow(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     borrow_date = db.Column(db.DateTime, default=datetime.utcnow)
     return_date = db.Column(db.DateTime, nullable=True)
+    book = db.relationship('Book', backref='borrow_records', overlaps="related_book")  # ここを変更

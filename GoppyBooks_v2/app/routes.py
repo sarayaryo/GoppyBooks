@@ -3,6 +3,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models import User, Book, Borrow
 from app.forms import LoginForm, RegistrationForm, BorrowForm, ReturnForm, SearchForm
+import logging
+from datetime import datetime
 
 main = Blueprint('main', __name__)
 
@@ -13,8 +15,9 @@ def index():
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    form.name.choices = [(user.id, user.name) for user in User.query.all()]
     if form.validate_on_submit():
-        user = User.query.filter_by(name=form.name.data).first()
+        user = User.query.get(form.name.data)
         if user:
             login_user(user)
             return redirect(url_for('main.mypage'))
@@ -61,29 +64,37 @@ def search():
 @main.route('/borrow/<int:book_id>', methods=['POST'])
 @login_required
 def borrow(book_id):
-    book = Book.query.get_or_404(book_id)
-    if not book.is_borrowed:
-        borrow = Borrow(book_id=book.id, user_id=current_user.id)
-        book.is_borrowed = True
-        db.session.add(borrow)
-        db.session.commit()
-        flash('Book borrowed successfully', 'success')
-    else:
-        flash('Book is not available', 'danger')
+    try:
+        book = Book.query.get_or_404(book_id)
+        if not book.is_borrowed:
+            borrow = Borrow(book_id=book.id, user_id=current_user.id)
+            book.is_borrowed = True
+            current_user.current_borrowed_book_id = book.id
+            db.session.add(borrow)
+            db.session.commit()
+            flash('Book borrowed successfully', 'success')
+        else:
+            flash('Book is not available', 'danger')
+    except Exception as e:
+        logging.error(f"Error borrowing book: {e}")
+        flash('An error occurred while borrowing the book.', 'danger')
     return redirect(url_for('main.mypage'))
 
-@main.route('/return', methods=['GET', 'POST'])
+@main.route('/return/<int:borrow_id>', methods=['POST'])
 @login_required
-def return_book():
-    form = ReturnForm()
-    if form.validate_on_submit():
-        borrow = Borrow.query.filter_by(book_id=form.book_id.data, user_id=current_user.id).first()
-        if borrow and borrow.return_date is None:
+def return_book(borrow_id):
+    try:
+        borrow = Borrow.query.get_or_404(borrow_id)
+        if borrow.return_date is None:
             borrow.return_date = datetime.utcnow()
             book = Book.query.filter_by(id=borrow.book_id).first()
             book.is_borrowed = False
+            current_user.current_borrowed_book_id = None
             db.session.commit()
             flash('Book returned successfully', 'success')
         else:
             flash('Invalid return attempt', 'danger')
-    return render_template('return.html', form=form)
+    except Exception as e:
+        logging.error(f"Error returning book: {e}")
+        flash('An error occurred while returning the book.', 'danger')
+    return redirect(url_for('main.mypage'))

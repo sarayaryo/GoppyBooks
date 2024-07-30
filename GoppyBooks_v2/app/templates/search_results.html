@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block content %}
   <h1>Search Results</h1>
   <ul>
@@ -6,15 +7,13 @@
       <li>
         {{ book.title }} by {{ book.authors }}
         {% if not book.is_borrowed %}
-          <form method="POST" action="{{ url_for('main.borrow', book_id=book.id) }}">
+          <form method="POST" action="{{ url_for('main.borrow', book_id=book.id) }}" style="display:inline;">
             <button type="submit" class="btn btn-primary">Borrow</button>
           </form>
         {% else %}
-          <span>Not available</span>
+          <span class="text-muted">Not available</span>
         {% endif %}
       </li>
     {% endfor %}
   </ul>
-  <a href="{{ url_for('main.search') }}">Back to Search</a>
-  <a href="{{ url_for('main.mypage') }}">Back to My Page</a>
 {% endblock %}

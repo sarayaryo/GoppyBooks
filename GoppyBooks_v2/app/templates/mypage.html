@@ -1,10 +1,16 @@
 {% extends "base.html" %}
+
 {% block content %}
   <h1>My Page</h1>
   <h2>Borrowed Books</h2>
   <ul>
     {% for borrow in borrowed_books %}
-      <li>{{ borrow.book.title }} by {{ borrow.book.authors }}</li>
+      <li>
+        {{ borrow.related_book.title }} by {{ borrow.related_book.authors }}
+        <form method="POST" action="{{ url_for('main.return_book', borrow_id=borrow.id) }}" style="display:inline;">
+          <button type="submit" class="btn btn-danger">Return</button>
+        </form>
+      </li>
     {% endfor %}
   </ul>
 {% endblock %}
