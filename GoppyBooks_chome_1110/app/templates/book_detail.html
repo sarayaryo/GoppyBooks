@@ -1,0 +1,35 @@
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  
+  {% extends "base.html" %}
+  
+  {% block content %}
+    <div class="container my-5">
+      <div class="row">
+        <div class="col-md-4">
+          <img src="{{ book.thumbnail }}" class="img-fluid" alt="{{ book.title }} thumbnail">
+        </div>
+        <div class="col-md-8">
+          <h2>{{ book.title }}</h2>
+          <p><strong>Authors:</strong> {{ book.authors }}</p>
+          <p><strong>Categories:</strong> {{ book.categories }}</p>
+          <p><strong>Description:</strong> {{ book.description }}</p> <!-- Bookの詳細情報の項目がある前提で表示 -->
+          <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+          <p><strong>Published Date:</strong> {{ book.published_date }}</p>
+          
+          <div class="mt-4">
+            {% if not book.is_borrowed %}
+              <form method="POST" action="{{ url_for('main.borrow', book_id=book.id) }}" style="display:inline;">
+                <button type="submit" class="btn btn-primary">Borrow</button>
+              </form>
+            {% else %}
+              <span class="text-muted">Not available</span>
+            {% endif %}
+            <button onclick="window.history.back()" class="btn btn-secondary ml-3">Back to Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+  
